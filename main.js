@@ -21,6 +21,9 @@ var server = http.createServer(function(request, response) {
             dbClient.connect();
             var query = dbClient.query('CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)');
             query.on('end', function() { client.end(); });
+            response.writeHead(200, {"Content-Type": "text"});
+            response.write("hej");
+            response.end();
             break;
         case "/followTopic":
             
