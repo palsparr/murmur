@@ -1,22 +1,28 @@
 var http = require('http');
 var url = require('url');
+var pg = require('pg');
+var connectionString = "postgres://postgres:patrik13@localhost/postgres";
+var dbClient = new pg.Client(connectionString);
 
 var responseJSONObject = {};
 var responseArray = [];
 var messageArray = [];
+
 
 var server = http.createServer(function(request, response) {
     
     var parsedRequest = url.parse(request.url, true);
     
     switch(parsedRequest.pathname) {
-        case "/search":
+        case "/searchTopics":
             
             break;
-        case "/create":
-            
+        case "/createTopic":
+            dbClient.connect();
+            var query = dbClient.query('CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)');
+            query.on('end', function() { client.end(); });
             break;
-        case "/follow":
+        case "/followTopic":
             
             break;
         case "/sendMSG":
@@ -29,10 +35,10 @@ var server = http.createServer(function(request, response) {
         case "/getPreviousMsgs":
             
             break;
-        case "/getFollowed":
+        case "/getFollowedTopics":
             
             break;
-        case "/getTop":
+        case "/getTopTopics":
             
             break;
         case "/update":
