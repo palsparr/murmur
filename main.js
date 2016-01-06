@@ -3,32 +3,45 @@ var url = require('url');
 
 var responseJSONObject = {};
 var responseArray = [];
+var messageArray = [];
 
-var server = createServer(function(request, response) {
+var server = http.createServer(function(request, response) {
     
     var parsedRequest = url.parse(request.url, true);
     
-    switch(parsedRequest) {
-        case search:
+    switch(parsedRequest.pathname) {
+        case "/search":
             
             break;
-        case create:
+        case "/create":
             
             break;
-        case follow:
+        case "/follow":
             
             break;
-        case sendMSG:
+        case "/sendMSG":
+            var message = parsedRequest.query.message;
+            sendMessage(message, 1);
+            response.writeHead(200, {"Content-Type": "text"});
+            response.write("Message Sent!");
+            response.end();
+            break;
+        case "/getPreviousMsgs":
             
             break;
-        case getPreviousMsgs:
+        case "/getFollowed":
             
             break;
-        case getFollowed:
+        case "/getTop":
             
             break;
-        case getTop:
-            
+        case "/update":
+            update(1);
+            response.writeHead(200, {"Content-Type": "text"});
+            responseJSONObject.code = 200;
+            responseJSONObject.request = parsedRequest.pathname;
+            response.write(JSON.stringify(responseJSONObject));
+            response.end();
             break;
         default:
                     
@@ -37,6 +50,9 @@ var server = createServer(function(request, response) {
     
     
 });
+
+server.listen(80);
+console.log("Listening... Ya bitch!");
 
 function searchTopics(keyword) {
     
@@ -48,7 +64,7 @@ function followTopic(topicID) {
 
 }
 function sendMessage(message, topicID) {
-    
+    messageArray.push(message);
 }
 function getPreviousMsgs(topicID) {
     
@@ -56,6 +72,9 @@ function getPreviousMsgs(topicID) {
 function getFollowedTopics(user) {
     
 }
-fuction getTopTopics() {
+function getTopTopics() {
     
+}
+function update(topicID) {
+    responseJSONObject.messages = messageArray;
 }
