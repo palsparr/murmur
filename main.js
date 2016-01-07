@@ -1,7 +1,7 @@
 var http = require('http');
 var url = require('url');
 var pg = require('pg');
-var connectionString = "postgres://anonymousgangster:patrik13@localhost:5432/anonymousgangster";
+var connectionString = "postgres://anonymousgangster:p4tr1ktr3tt0n@localhost:5432/anonymousgangster";
 var dbClient = new pg.Client(connectionString);
 
 var responseJSONObject = {};
