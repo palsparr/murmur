@@ -18,15 +18,25 @@ var server = http.createServer(function(request, response) {
             
             break;
         case "/createTopic":
-            dbClient.connect();
-            var query = dbClient.query('CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)');
-            query.on('end', function() { dbClient.end(); });
-            response.writeHead(200, {"Content-Type": "text"});
-            response.write("hej");
-            response.end();
+            if (parsedRequest.query.topicID) {
+                dbClient.connect();
+                var query = dbClient.query('CREATE TABLE IF NOT EXISTS topics (id TEXT not null, followers INTEGER)');
+                query = dbClient.query('INSERT INTO topics VALUES(' + parsedRequest.query.topicID + ', ' + 0 + ')');
+                query = dbClient.query('CREATE TABLE IF NOT EXISTS ' + parsedRequest.query.topicID + ' (messages TEXT)');
+                query.on('end', function() { dbClient.end(); });
+                response.writeHead(200, {"Content-Type": "text"});
+                response.write("hej");
+                response.end();
+            }
             break;
         case "/followTopic":
-            
+            dbClient.connect();
+            var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + parsedRequest.query.topicID + ')');
+            query.on('row', function(row) {
+                followers = row.followers;
+            });
+            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + parsedRequest.query.topicID);
+            query.on('end', function() { dbClient.end(); });
             break;
         case "/sendMSG":
             var message = parsedRequest.query.message;
