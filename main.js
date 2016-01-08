@@ -36,12 +36,12 @@ var server = http.createServer(function(request, response) {
             dbClient.connect();
             var followers;
             var topicID = parsedRequest.query.topicID;
-            var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "';");
+            var query = dbClient.query("SELECT followers FROM topics WHERE id = '" + topicID + "'");
             console.log(topicID);
             query.on('row', function(row) {
                 followers = row.followers;
             });
-            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' +  "'"  + topicID + "';");
+            query = dbClient.query('UPDATE topics SET followers = ' + followers + " WHERE id = '" + topicID + "'");
             query.on('end', function() { dbClient.end(); });
             break;
         case "/sendMSG":
