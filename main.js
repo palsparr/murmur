@@ -39,8 +39,8 @@ var server = http.createServer(function(request, response) {
             var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "'");
             console.log('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "'");
             query.on('row', function(row) {
-                followers = row.followers;
-                followers ++;
+                followers = row.followers + 1;
+                console.log(followers);
             });
             query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + "'" + topicID + "'");
             query.on('end', function() { dbClient.end(); });
