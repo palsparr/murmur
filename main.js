@@ -40,9 +40,18 @@ var server = http.createServer(function(request, response) {
             console.log('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "'");
             query.on('row', function(row) {
                 followers = row.followers;
+                followers ++;
             });
             query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + "'" + topicID + "'");
             query.on('end', function() { dbClient.end(); });
+            
+            responseJSONObject.messages = messageArray;
+            response.writeHead(200, {"Content-Type": "text"});
+            responseJSONObject.code = 200;
+            responseJSONObject.request = parsedRequest.pathname;
+            response.write(JSON.stringify(responseJSONObject));
+            response.end();
+            
             break;
         case "/sendMSG":
             var message = parsedRequest.query.message;
