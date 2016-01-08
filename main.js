@@ -46,8 +46,8 @@ var server = http.createServer(function(request, response) {
             var topicID = parsedRequest.query.topicID;
             if (message) {
                 if (topicID) {
-                    var query = dbClient.query('INSERT INTO ' + '"' + topicID + '"' + ' VALUES (' + "'" + message + "'" + ')');
-                    console.log('jag kom hit');
+                    var query = dbClient.query('INSERT INTO ' + topicID  + ' VALUES (' + "'" + message + "'" + ')');
+                    console.log(topicID);
                 }
             }
             query = dbClient.query('SELECT * FROM ' + topicID);
