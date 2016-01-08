@@ -46,14 +46,14 @@ var server = http.createServer(function(request, response) {
             var topicID = parsedRequest.query.topicID;
             if (message) {
                 if (topicID) {
-                    var query = dbClient.query('INSERT INTO ' + topicID  + ' VALUES (' + "'" + message + "'" + ')');
+                    var query = dbClient.query('INSERT INTO ' + topicID  + '(messages) VALUES (' + "'" + message + "'" + ')');
                     console.log(topicID);
                 }
             }
             query = dbClient.query('SELECT * FROM ' + topicID);
             query.on('row', function(row) {
-                messageArray.push(row.toString); 
-                console.log(row.toString);
+                messageArray.push(row.messages.toString); 
+                console.log(row.messages.toString);
             });
             query.on('end', function() { dbClient.end(); });
             //sendMessage(message, 1);
