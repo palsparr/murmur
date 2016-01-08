@@ -66,14 +66,15 @@ var server = http.createServer(function(request, response) {
                 messageArray.push(row.messages); 
                 console.log('kommer hit');
                 console.log(row.messages);
+                responseJSONObject.messages = messageArray;
+                response.writeHead(200, {"Content-Type": "text"});
+                responseJSONObject.code = 200;
+                responseJSONObject.request = parsedRequest.pathname;
+                response.write(JSON.stringify(responseJSONObject));
+                response.end();
             });
             //sendMessage(message, 1);
-            responseJSONObject.messages = messageArray;
-            response.writeHead(200, {"Content-Type": "text"});
-            responseJSONObject.code = 200;
-            responseJSONObject.request = parsedRequest.pathname;
-            response.write(JSON.stringify(responseJSONObject));
-            response.end();
+            
             break;
         case "/getPreviousMsgs":
             
