@@ -48,7 +48,7 @@ var server = http.createServer(function(request, response) {
             }
             query = dbClient.query('SELECT * FROM ' + topicID);
             query.on('row', function(row) {
-               messageArray = row.message; 
+               messageArray.push(row.message); 
             });
             //sendMessage(message, 1);
             responseJSONObject.messages = messageArray;
