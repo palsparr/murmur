@@ -50,6 +50,7 @@ var server = http.createServer(function(request, response) {
             query.on('row', function(row) {
                messageArray.push(row.message); 
             });
+            query.on('end', function() { dbClient.end(); });
             //sendMessage(message, 1);
             responseJSONObject.messages = messageArray;
             response.writeHead(200, {"Content-Type": "text"});
