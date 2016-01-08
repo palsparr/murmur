@@ -34,14 +34,14 @@ var server = http.createServer(function(request, response) {
             break;
         case "/followTopic":
             dbClient.connect();
-            var followers;
+            var followers = 0;
             var topicID = parsedRequest.query.topicID;
             var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "'");
             console.log('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "'");
             query.on('row', function(row) {
                 followers = row.followers;
             });
-            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + topicID);
+            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + "'" + topicID + "'");
             query.on('end', function() { dbClient.end(); });
             break;
         case "/sendMSG":
