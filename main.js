@@ -52,8 +52,8 @@ var server = http.createServer(function(request, response) {
             }
             query = dbClient.query('SELECT * FROM ' + topicID);
             query.on('row', function(row) {
-               messageArray.push(row.message); 
-                console.log(row.message);
+                messageArray.push(row.message.toString); 
+                console.log(row.message.toString);
             });
             query.on('end', function() { dbClient.end(); });
             //sendMessage(message, 1);
