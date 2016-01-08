@@ -40,9 +40,22 @@ var server = http.createServer(function(request, response) {
             break;
         case "/sendMSG":
             var message = parsedRequest.query.message;
-            sendMessage(message, 1);
+            var topicID = parsedRequest.query.topicID;
+            if (message) {
+                if (topicID) {
+                    var query = dbClient.query('INSERT INTO ' + topicID + ' VALUES (' + "'" + message + "'" + ')');
+                }
+            }
+            query = dbClient.query('SELECT * FROM ' + topicID);
+            query.on('row', function(row) {
+               messageArray = row.message; 
+            });
+            //sendMessage(message, 1);
+            responseJSONObject.messages = messageArray;
             response.writeHead(200, {"Content-Type": "text"});
-            response.write("Message Sent!");
+            responseJSONObject.code = 200;
+            responseJSONObject.request = parsedRequest.pathname;
+            response.write(JSON.stringify(responseJSONObject));
             response.end();
             break;
         case "/getPreviousMsgs":
