@@ -34,6 +34,7 @@ var server = http.createServer(function(request, response) {
             break;
         case "/followTopic":
             dbClient.connect();
+            var followers;
             var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + parsedRequest.query.topicID + ')');
             query.on('row', function(row) {
                 followers = row.followers;
@@ -46,7 +47,7 @@ var server = http.createServer(function(request, response) {
             var topicID = parsedRequest.query.topicID;
             if (message) {
                 if (topicID) {
-                    var query = dbClient.query('INSERT INTO ' + topicID  + '(messages) VALUES (' + "'" + message + "'" + ')');
+                    var query = dbClient.query('INSERT INTO ' + topicID  + ' (messages) VALUES (' + "'" + message + "'" + ')');
                     console.log(topicID);
                 }
             }
