@@ -35,11 +35,11 @@ var server = http.createServer(function(request, response) {
         case "/followTopic":
             dbClient.connect();
             var followers;
-            var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + "'" + 'testernester' + "'");
+            var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + "'" + parsedRequest.query.topicID + "'");
             query.on('row', function(row) {
                 followers = row.followers;
             });
-            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' +  "'"  + 'testernester' + "'");
+            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' +  "'"  + parsedRequest.query.topicID + "'");
             query.on('end', function() { dbClient.end(); });
             break;
         case "/sendMSG":
