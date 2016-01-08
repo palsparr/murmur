@@ -3,6 +3,7 @@ var url = require('url');
 var pg = require('pg');
 var connectionString = "postgres://anonymousgangster:patrik13@localhost:5432/anonymousgangster";
 var dbClient = new pg.Client(connectionString);
+dbClient.connect();
 
 var responseJSONObject = {};
 var responseArray = [];
@@ -19,21 +20,20 @@ var server = http.createServer(function(request, response) {
             break;
         case "/createTopic":
             if (parsedRequest.query.topicID) {
-                dbClient.connect();
                 var query = dbClient.query('CREATE TABLE IF NOT EXISTS topics (id TEXT, followers INTEGER)');
                 query = dbClient.query('INSERT INTO topics (id, followers) VALUES (' + "'" + parsedRequest.query.topicID + "'" + ', ' + 0 + ')');
                 query.on('row', function(row) {
                     console.log(row.id + ' ' + row.followers); 
                 });
                 query = dbClient.query('CREATE TABLE IF NOT EXISTS ' + parsedRequest.query.topicID + ' (messages TEXT)');
-                query.on('end', function() { dbClient.end(); });
+                
                 response.writeHead(200, {"Content-Type": "text"});
                 response.write("hej");
                 response.end();
             }
             break;
         case "/followTopic":
-            dbClient.connect();
+            
             var followers = 0;
             var topicID = parsedRequest.query.topicID;
             var query = dbClient.query('SELECT followers FROM topics WHERE id = ' + "'" + topicID + "'");
@@ -43,7 +43,6 @@ var server = http.createServer(function(request, response) {
                 console.log(followers);
                 query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + "'" + topicID + "'");
             });
-            query.on('end', function() { dbClient.end(); });
             
             responseJSONObject.messages = messageArray;
             response.writeHead(200, {"Content-Type": "text"});
@@ -64,10 +63,10 @@ var server = http.createServer(function(request, response) {
             }
             query = dbClient.query('SELECT * FROM ' + topicID);
             query.on('row', function(row) {
-                messageArray.push(row.messages.toString); 
-                console.log(row.messages.toString);
+                messageArray.push(row.messages); 
+                console.log('kommer hit');
+                console.log(row.messages);
             });
-            query.on('end', function() { dbClient.end(); });
             //sendMessage(message, 1);
             responseJSONObject.messages = messageArray;
             response.writeHead(200, {"Content-Type": "text"});
