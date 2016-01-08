@@ -41,13 +41,13 @@ var server = http.createServer(function(request, response) {
             query.on('row', function(row) {
                 followers = row.followers + 1;
                 console.log(followers);
+                query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + "'" + topicID + "'");
             });
-            query = dbClient.query('UPDATE topics SET followers = ' + followers + ' WHERE id = ' + "'" + topicID + "'");
             query.on('end', function() { dbClient.end(); });
             
             responseJSONObject.messages = messageArray;
             response.writeHead(200, {"Content-Type": "text"});
-            responseJSONObject.code = followers;
+            responseJSONObject.code = 200;
             responseJSONObject.request = parsedRequest.pathname;
             response.write(JSON.stringify(responseJSONObject));
             response.end();
