@@ -22,6 +22,9 @@ var server = http.createServer(function(request, response) {
                 dbClient.connect();
                 var query = dbClient.query('CREATE TABLE IF NOT EXISTS topics (id TEXT, followers INTEGER)');
                 query = dbClient.query('INSERT INTO topics (id, followers) VALUES (' + "'" + parsedRequest.query.topicID + "'" + ', ' + 0 + ')');
+                query.on('row', function(row) {
+                    console.log(row.id + ' ' + row.followers); 
+                });
                 query = dbClient.query('CREATE TABLE IF NOT EXISTS ' + parsedRequest.query.topicID + ' (messages TEXT)');
                 query.on('end', function() { dbClient.end(); });
                 response.writeHead(200, {"Content-Type": "text"});
@@ -50,6 +53,7 @@ var server = http.createServer(function(request, response) {
             query = dbClient.query('SELECT * FROM ' + topicID);
             query.on('row', function(row) {
                messageArray.push(row.message); 
+                console.log(row.message);
             });
             query.on('end', function() { dbClient.end(); });
             //sendMessage(message, 1);
