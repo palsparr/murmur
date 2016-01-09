@@ -69,17 +69,17 @@ var server = http.createServer(function(request, response) {
     };
                     
     function searchTopics(keyword) {
-        
+        var resulList = [];
         var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "')");
                 query.on('row', function(row) {
-                    var resultList = [];
                     var topic = {};
                     topic.id = row.id;
                     topic.followers = row.followers;
-                    responseArray = resultList;
+                    resulList.push(topic);
                     
                 });
                 query.on('end', function() {
+                    responseArray = resultList;
                     responseJSONObject.searchResults = responseArray;
                     response.writeHead(200, {"Content-Type": "text"});
                     responseJSONObject.code = 200;
