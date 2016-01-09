@@ -15,6 +15,7 @@ var server = http.createServer(function(request, response) {
     var parsedRequest = url.parse(request.url, true);
     
     switch(parsedRequest.pathname) {
+        responseArray = [];
         case "/searchTopics":
             var searchKey = parsedRequest.query.key;
             if (searchKey) {
@@ -78,7 +79,7 @@ var server = http.createServer(function(request, response) {
                     
                 });
                 query.on('end', function() {
-                    responseJSONObject.searchResults = responseArray;
+                    responseJSONObject.searchResults.topics = responseArray;
                     response.writeHead(200, {"Content-Type": "text"});
                     responseJSONObject.code = 200;
                     responseJSONObject.request = parsedRequest.pathname;
