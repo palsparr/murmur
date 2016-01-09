@@ -15,7 +15,7 @@ var server = http.createServer(function(request, response) {
     var parsedRequest = url.parse(request.url, true);
     
     switch(parsedRequest.pathname) {
-        responseArray = [];
+        responseArray.length = 0;
         case "/searchTopics":
             var searchKey = parsedRequest.query.key;
             if (searchKey) {
