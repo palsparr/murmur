@@ -13,7 +13,6 @@ var messageArray = [];
 var server = http.createServer(function(request, response) {
     
     var parsedRequest = url.parse(request.url, true);
-    responseArray = [];
     
     switch(parsedRequest.pathname) {
         case "/searchTopics":
@@ -73,10 +72,11 @@ var server = http.createServer(function(request, response) {
         
         var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "')");
                 query.on('row', function(row) {
+                    var resultList = [];
                     var topic = {id:'null', followers:0};
                     topic.id = row.id;
                     topic.followers = row.followers;
-                    responseArray.push(topic);
+                    responseArray = resultList;
                     
                 });
                 query.on('end', function() {
