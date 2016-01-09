@@ -13,9 +13,9 @@ var messageArray = [];
 var server = http.createServer(function(request, response) {
     
     var parsedRequest = url.parse(request.url, true);
+    responseArray = [];
     
     switch(parsedRequest.pathname) {
-        responseArray.length = 0;
         case "/searchTopics":
             var searchKey = parsedRequest.query.key;
             if (searchKey) {
@@ -70,6 +70,7 @@ var server = http.createServer(function(request, response) {
     };
                     
     function searchTopics(keyword) {
+        
         var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "')");
                 query.on('row', function(row) {
                     var topic = {id:'null', followers:0};
