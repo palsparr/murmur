@@ -8,6 +8,7 @@ dbClient.connect();
 var responseJSONObject = {};
 var responseArray = [];
 var messageArray = [];
+var resultList = [];
 
 
 var server = http.createServer(function(request, response) {
@@ -69,7 +70,7 @@ var server = http.createServer(function(request, response) {
     };
                     
     function searchTopics(keyword) {
-        var resulList = [];
+        resulList = [];
         var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "')");
                 query.on('row', function(row) {
                     var topic = {};
