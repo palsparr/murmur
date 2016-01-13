@@ -71,7 +71,8 @@ var server = http.createServer(function(request, response) {
                     
     function searchTopics(keyword) {
         resulList = [];
-        var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "')");
+        console.log(keyword);
+        var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "'" + ');');
                 query.on('row', function(row) {
                     var topic = {};
                     topic.id = row.id;
