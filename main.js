@@ -17,7 +17,6 @@ var server = http.createServer(function(request, response) {
     
     switch(parsedRequest.pathname) {
         case "/searchTopics":
-            
             var searchKey = parsedRequest.query.key;
             if (searchKey) {
                 searchTopics(searchKey);   
@@ -71,15 +70,15 @@ var server = http.createServer(function(request, response) {
     };
                     
     function searchTopics(keyword) {
-        var resultList = [];
+        resultList = [];
         console.log(keyword);
         var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "'" + ')');
-        console.log('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "'" + ');');
+        console.log('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "'" + ');'
                 query.on('row', function(row) {
                     var topic = {};
                     topic.id = row.id;
                     topic.followers = row.followers;
-                    resulList.push(topic);
+                    resultList.push(topic);
                     
                 });
                 query.on('end', function() {
@@ -89,8 +88,7 @@ var server = http.createServer(function(request, response) {
                     responseJSONObject.code = 200;
                     responseJSONObject.request = parsedRequest.pathname;
                     response.write(JSON.stringify(responseJSONObject));
-                    response.end();
-                    resultList = [];
+                    response.end();                    
                 });
         
     }
