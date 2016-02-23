@@ -16,6 +16,26 @@ var server = http.createServer(function(request, response) {
     var parsedRequest = url.parse(request.url, true);
     
     switch(parsedRequest.pathname) {
+        case "/getAllTopics":
+            resultList = [];
+        var query = dbClient.query('SELECT * FROM topics');
+                query.on('row', function(row) {
+                    var topic = {};
+                    topic.id = row.id;
+                    topic.followers = row.followers;
+                    resultList.push(topic);
+                    
+                });
+                query.on('end', function() {
+                    responseArray = resultList;
+                    responseJSONObject.searchResults = responseArray;
+                    response.writeHead(200, {"Content-Type": "text"});
+                    responseJSONObject.code = 200;
+                    responseJSONObject.request = parsedRequest.pathname;
+                    response.write(JSON.stringify(responseJSONObject));
+                    response.end();                    
+                });
+            break;
         case "/searchTopics":
             var searchKey = parsedRequest.query.key;
             if (searchKey) {
@@ -71,9 +91,7 @@ var server = http.createServer(function(request, response) {
                     
     function searchTopics(keyword) {
         resultList = [];
-        console.log(keyword);
         var query = dbClient.query('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "'" + ')');
-        console.log('SELECT * FROM topics WHERE to_tsvector(id) @@ plainto_tsquery(' + "'" + keyword + "'" + ');');
                 query.on('row', function(row) {
                     var topic = {};
                     topic.id = row.id;
